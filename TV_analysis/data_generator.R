@@ -1,5 +1,7 @@
 # Data generator: visits, revenues and orders
 
+setwd("~/TV_campaign_linio/TV_analysis")
+
 # - - - - - - - - - - - - - - - #
 # Inputs # 
 x <- yaml.load_file("keys.yaml")
@@ -13,7 +15,7 @@ library(bigrquery)
 library(httpuv)
 library(RMySQL)
 library(yaml)
-setwd("~/TV_campaign_linio/TV_analysis")
+
 
 if(country == "MEX"){
 project <- "ace-amplifier-455" 
