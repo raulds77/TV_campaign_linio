@@ -107,6 +107,9 @@ for(i in 1:length(seq)){
         data_m <- merge(x = data_m, y = data_brand, by = c("date","hits_hour","hits_minute"), all.x=TRUE)
         data_m <- merge(x = data_m, y = data_gross_orders, by = c("date","hits_hour","hits_minute"), all.x=TRUE)
         data_m <- merge(x = data_m, y = data_net_orders, by = c("date","hits_hour","hits_minute"), all.x=TRUE)
+
+        ### NA -> 0 here
+        
         
         # New variables
         data_m$branding <- data_m$direct + data_m$organic + data_m$brand 
