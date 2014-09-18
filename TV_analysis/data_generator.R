@@ -1,6 +1,6 @@
 # Data generator: visits, revenues and orders
 
-setwd("~/TV_campaign_linio/TV_analysis")
+#setwd("~/TV_campaign_linio/TV_analysis")
 
 library(lubridate)
 library(bigrquery)
@@ -108,7 +108,14 @@ for(i in 1:length(seq)){
         data_m <- merge(x = data_m, y = data_gross_orders, by = c("date","hits_hour","hits_minute"), all.x=TRUE)
         data_m <- merge(x = data_m, y = data_net_orders, by = c("date","hits_hour","hits_minute"), all.x=TRUE)
 
-        ### NA -> 0 here
+        ### NA's to 0 
+        print(paste(fecha,"NA's to 0 ..."))
+        names <- names(data_m)
+        for (i in 1:ncol(data_m)){          
+          if(names[i] != "date"){
+            data_m[which(is.na(data_m[,i])),i]<-0
+          }
+        }
         
         
         # New variables
