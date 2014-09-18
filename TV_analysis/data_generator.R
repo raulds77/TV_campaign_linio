@@ -6,8 +6,8 @@ setwd("~/TV_campaign_linio/TV_analysis")
 # Inputs # 
 x <- yaml.load_file("keys.yaml")
 country <- "MEX"
-inicio <- as.Date("2014-08-24")
-final <- as.Date("2014-08-27") 
+inicio <- as.Date("2014-08-27")
+final <- as.Date("2014-08-31") 
 # - - - - - - - - - - - - - - - #
 
 library(lubridate)
@@ -96,6 +96,8 @@ for(i in 1:length(seq)){
         
         data_net_orders <- dbSendQuery(mydb,sql_net_orders)
         data_net_orders <- fetch(data_net_orders,n=1440) 
+        
+        dbDisconnect(mydb)
         
         # Merge
         print(paste(fecha,"Merging ..."))
