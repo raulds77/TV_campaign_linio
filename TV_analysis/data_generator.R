@@ -1,21 +1,5 @@
 # Data generator: visits, revenues and orders
 
-#setwd("~/TV_campaign_linio/TV_analysis")
-
-library(lubridate)
-library(bigrquery)
-library(httpuv)
-library(RMySQL)
-library(yaml)
-
-# - - - - - - - - - - - - - - - #
-# Inputs # 
-x <- yaml.load_file("keys.yaml")
-country <- "MEX"
-inicio <- as.Date("2014-08-27")
-final <- as.Date("2014-08-31") 
-# - - - - - - - - - - - - - - - #
-
 if(country == "MEX"){
 project <- "ace-amplifier-455" 
 dataset <- "58090804"
