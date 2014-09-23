@@ -3,3 +3,4 @@
 TV_analysis/.gitignore
 *.Rhistory
 *.xlsx
+*.Rdata
