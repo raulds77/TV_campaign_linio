@@ -1,19 +1,18 @@
 # Data generator: visits, revenues and orders
 
-#setwd("~/TV_campaign_linio/TV_analysis")
-
 library(lubridate)
 library(bigrquery)
 library(httpuv)
 library(RMySQL)
 library(yaml)
 
+country <- toupper(country)
+inicio <- as.Date("2014-08-25")
+final <- as.Date(end)
+
 # - - - - - - - - - - - - - - - #
 # Inputs # 
-x <- yaml.load_file("keys.yaml")
-country <- "MEX"
-inicio <- as.Date("2014-08-27")
-final <- as.Date("2014-08-31") 
+x <- yaml.load_file("keys.yaml") 
 # - - - - - - - - - - - - - - - #
 
 if(country == "MEX"){
@@ -130,3 +129,6 @@ for(i in 1:length(seq)){
     }
 }
 
+country <- tolower(country)
+
+suppressWarnings(rm(x,project, dataset, hits_hour, hits_minute, inicio, final, seq, fecha, p1,p1_brand,p1_direct,p1_gross_orders,p1_net_orders,p1_organic,p2,p2_brand,p2_direct,p2_gross_orders,p2_net_orders,p2_organic))
