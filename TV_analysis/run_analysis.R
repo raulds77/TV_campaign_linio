@@ -1,6 +1,9 @@
+### This is the main script to run the 8 - min analysis and saving the spot lift data
+
+
 setwd("C:/Users/enrique.balp/Desktop/TV_campaign_linio/TV_analysis")
 
-country <- "mex"
+country <- "col"
 end <- "20140921"
 
 end <- as.POSIXlt(paste(end,"235900"), format="%Y%m%d %H%M%S")

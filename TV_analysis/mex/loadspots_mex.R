@@ -1,5 +1,5 @@
 ibope <- read.csv("./mex/spots/Data_Linio.csv")
-spotemp <- data.frame(lift = numeric(length(ibope$Canal)))
+spotemp <- data.frame(rating = numeric(length(ibope$Canal)))
 spotemp$channel <- ibope$Canal
 spotemp$tmstmp <- as.POSIXlt(paste(ibope$Fecha,ibope$Hora),format="%d/%m/%Y %H:%M:%S")
 spotemp$rating <- ibope$Rating
@@ -10,6 +10,9 @@ spotemp$cost <- spotemp$cost/13
 spotemp$fringe <- ibope$Franja
 spotemp$duration <- ibope$Duracion_Spot
 spotemp <- spotemp[with(spotemp, order(tmstmp)), ]
+spotemp$ncost <- spotemp$cost*30/spotemp$duration
+if (country == "mex") spotemp$ncost[which(spotemp$duration == 10)] <- spotemp$ncost[which(spotemp$duration == 10)]/1.25
+
 
 spot <- spotemp
 spot$dtype <- "we"

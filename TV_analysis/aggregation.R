@@ -1,3 +1,7 @@
+### Calculates aggregated data per spot, then call plotit
+### needs revision because lift no longer exists (see lift_v, lift_nv, lift_b)
+### This is not called from primary analysis (aggregation is to be done in Tableau)
+
 library(plyr)
 
 print("Channel Aggregation")

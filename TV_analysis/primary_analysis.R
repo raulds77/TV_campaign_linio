@@ -9,7 +9,7 @@ for (j in 1:length(seqdays)){
   
   d <- seqdays[j]
   print("---")
-  print(paste("Loading & Analysing",d))
+  print(paste("Loading & Analysing",d,country))
   fileres <- paste("./",country,"/results/",country,"_visits_processed_",strftime(d,format="%Y%m%d"),".csv",sep="")
   
   if (! file.exists(fileres)){
@@ -86,8 +86,6 @@ for (j in 1:length(seqdays)){
     
     ####  ------  END Spot Lifts  ------  ####
     
-    spotmp$ncost <- spotmp$cost*30/spotmp$duration
-    if (country == "mex") spotmp$ncost[which(spotmp$duration == 10)] <- spotmp$ncost[which(spotmp$duration == 10)]/1.25
     write.csv(spotmp, filespots)
   } else {
     spotmp <- read.csv(filespots)
@@ -99,4 +97,4 @@ for (j in 1:length(seqdays)){
 
 spot <- spot2
 
-suppressWarnings(rm(j,bad, goods, ind, indsp, t, wd, spot2,spotemp,spotmp,vtmp,ibope,d,fileres,filespots,file,i,seqdays))
+suppressWarnings(rm(base,lift,extra,xv,xex,j,bad, goods, ind, indsp, t, wd, spot2,spotemp,spotmp,vtmp,ibope,d,fileres,filespots,file,i,seqdays))

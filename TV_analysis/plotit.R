@@ -1,3 +1,6 @@
+### Plots comming from aggregated data in aggregation.R 
+### This is not called from primary_analysis.R (plotting will be done in Tableau)
+
 library(ggplot2)
 dayplot <- "20140829"
 

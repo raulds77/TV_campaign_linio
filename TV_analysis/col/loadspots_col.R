@@ -9,7 +9,7 @@ for (i in 1:length(seqdays)){
   ibope <- read.xlsx(file,1,startRow=2)
   if(length(ibope$X.Canal.)==0) next
   discount <- read.csv(paste("./col/spots/col_discounts.csv",sep=""))
-  spotemp <- data.frame(lift = numeric(length(ibope$X.Canal.)))
+  spotemp <- data.frame(rating = numeric(length(ibope$X.Canal.)))
   spotemp$channel <- ibope$X.Canal.
   spotemp$tmstmp <- ibope$X.Hora.Inicio.
   for(i in 1:length(spotemp$tmstmp)){if(nchar(spotemp$tmstmp[i])<6) spotemp$tmstmp[i] <- paste(0,spotemp$tmstmp[i],sep="")}
@@ -32,6 +32,9 @@ for (i in 1:length(seqdays)){
   spotemp <- spotemp[with(spotemp, order(tmstmp)), ]
   #for(i in 2:length(spotemp$dist)){spotemp$dist[i] <- as.numeric(difftime(spotemp$tmstmp[i], spotemp$tmstmp[i-1]))}
   spotemp$date <- strftime(spotemp$tmstmp,"%Y%m%d")
+  spotemp$ncost <- spotemp$cost*30/spotemp$duration
+  if (country == "mex") spotemp$ncost[which(spotemp$duration == 10)] <- spotemp$ncost[which(spotemp$duration == 10)]/1.25
+  
   spot <- rbind(spot,spotemp)
 }
 
