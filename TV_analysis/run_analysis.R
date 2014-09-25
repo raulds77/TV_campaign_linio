@@ -1,7 +1,7 @@
 setwd("C:/Users/enrique.balp/Desktop/TV_campaign_linio/TV_analysis")
 
-country <- "col"
-end <- "20140828"
+country <- "mex"
+end <- "20140921"
 
 end <- as.POSIXlt(paste(end,"235900"), format="%Y%m%d %H%M%S")
 if(country == 'mex') start <- as.POSIXlt("20140827", format="%Y%m%d")

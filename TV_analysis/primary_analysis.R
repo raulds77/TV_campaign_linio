@@ -5,22 +5,27 @@ v <- data.frame(visits = numeric())
 spot2 <- data.frame(rating = numeric())
 #wholebaseprom <- read.csv(paste('./',country,'/traffic/',"baseline_",country,".csv",sep=""))
 
-for (i in 1:length(seqdays)){
-  d <- seqdays[i]
+for (j in 1:length(seqdays)){
+  
+  d <- seqdays[j]
+  print("---")
   print(paste("Loading & Analysing",d))
   fileres <- paste("./",country,"/results/",country,"_visits_processed_",strftime(d,format="%Y%m%d"),".csv",sep="")
+  
   if (! file.exists(fileres)){
   
-  ## Load & Preprocess visits data from BigQuery
+  ##  --- Load Data & Preprocess --- ##
+    
   print(paste("GA BigQuery",d))
   file <- paste('./',country,'/traffic/',country,"_visits_",strftime(d,format = "%Y%m%d"),".csv",sep="")
   vtmp <- read.csv(file,stringsAsFactors = FALSE, na.strings ="null")
-
   vtmp$tmstmp <- as.POSIXlt(paste(vtmp$date,vtmp$hits_hour,vtmp$hits_minute), format = "%Y-%m-%d %H %M")
-  
   if(wday(d)>1) wd<-wday(d)-1 else wd<-7
   vtmp$wday<-wd
-#  vtmp$baseprom <- wholebaseprom[,(1+wd)]
+  #vtmp$baseprom <- wholebaseprom[,(1+wd)]
+  
+  
+  ## --- Ratings per minute  --- ##
   
   print(paste("Ratings per minute",d))
   vtmp$rating <- numeric(length(vtmp$tmstmp))
@@ -30,22 +35,26 @@ for (i in 1:length(seqdays)){
     vtmp$rating[ind]<-vtmp$rating[ind]+spotmp$rating[i]
   } 
  
-  print(paste("Instant Baseline",d))
-  vtmp$base <- rep(0,length(vtmp$visits))
-  thres_rat <- 0.1; winba <- 5; infl <- 8; goods <- 0;
-  for(t in seq(1:length(vtmp$visits))){
-    bad <- (sum(vtmp$rating[max(1,t-infl+1):t]*seq(.1,min(t*0.1,infl*0.1),0.1))>thres_rat)  
-    if(bad) {
-      vtmp$base[t] <- vtmp$base[t-1]
-      if(vtmp$base[t]>mean(vtmp$visits[max(1,t-winba):t])) vtmp$base[t] <- vtmp$visits[t]
-      goods <- 0
-    } else {
-      goods <- goods + 1
-      goods <- min(winba,goods)
-      vtmp$base[t] <- (winba-goods)/winba*mean(vtmp$base[max(1,t-winba):max(1,t-goods)]) + goods/winba*mean(vtmp$visits[max(1,t-goods):(t-1)])  
-    }  
-  }
-  vtmp$extra <- vtmp$visits - vtmp$base
+  ####   ------    Instant Baselines   -----------    ####
+
+  # Visits
+  print("Instant Baseline Visits")
+  xv <- vtmp$visits;
+  source('./instbaselift.R')
+  vtmp$base_v <- base; vtmp$extra_v <- extra
+  # New visits
+  print("Instant Baseline New Visits")
+  vx <- vtmp$newvisits;
+  source('./instbaselift.R')
+  vtmp$base_nv <- base; vtmp$extra_nv <- extra
+  # Branded visits
+  print("Instant Baseline Branded Visits")
+  vx <- vtmp$brand;
+  source('./instbaselift.R')
+  vtmp$base_b <- base; vtmp$extra_b <- extra
+
+  ####   ------    END Instant Baselines   -----------    ####       
+
   write.csv(vtmp, fileres)
   } else {
     vtmp <- read.csv(fileres)
@@ -53,13 +62,32 @@ for (i in 1:length(seqdays)){
 
   filespots <- paste("./",country,"/results/",country,"_spots_processed_",strftime(d,format="%Y%m%d"),".csv",sep="")
   if (! file.exists(filespots)){
-    print(paste("Spot Lift",d))
     spotmp <- spot[which(spot$date == strftime(d,format="%Y%m%d")),]
-    spotmp$lift <- rep(0,length(spotmp$rating))
-    for(t in seq(1:length(vtmp$tmstmp))){
-      indsp <- which(spotmp$tmstmp>(vtmp$tmstmp[t]-infl*60) & spotmp$tmstmp<=vtmp$tmstmp[t])
-      spotmp$lift[indsp] <- spotmp$lift[indsp] + vtmp$extra[t]*spotmp$rating[indsp]/sum(spotmp$rating[indsp])
-    }
+    
+    ####  ------  Spot Lifts  ------  ####
+    
+    # Visits
+    print("Spot Lift Visits")
+    xex <- vtmp$extra_v
+    source('./spotlift.R')
+    spotmp$lift_v <- lift
+    
+    # New Visits
+    print("Spot Lift New Visits")
+    xex <- vtmp$extra_nv
+    source('./spotlift.R')
+    spotmp$lift_nv <- lift
+    
+    # Branded Visits
+    print("Spot Lift Branded Visits")
+    xex <- vtmp$extra_b
+    source('./spotlift.R')
+    spotmp$lift_b <- lift
+    
+    ####  ------  END Spot Lifts  ------  ####
+    
+    spotmp$ncost <- spotmp$cost*30/spotmp$duration
+    if (country == "mex") spotmp$ncost[which(spotmp$duration == 10)] <- spotmp$ncost[which(spotmp$duration == 10)]/1.25
     write.csv(spotmp, filespots)
   } else {
     spotmp <- read.csv(filespots)
@@ -71,4 +99,4 @@ for (i in 1:length(seqdays)){
 
 spot <- spot2
 
-suppressWarnings(rm(bad, goods, ind, indsp, t, wd, spot2,spotemp,spotmp,vtmp,ibope,d,fileres,filespots,file,i,seqdays))
+suppressWarnings(rm(j,bad, goods, ind, indsp, t, wd, spot2,spotemp,spotmp,vtmp,ibope,d,fileres,filespots,file,i,seqdays))

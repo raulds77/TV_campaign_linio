@@ -131,4 +131,4 @@ for(i in 1:length(seq)){
 
 country <- tolower(country)
 
-suppressWarnings(rm(x,project, dataset, hits_hour, hits_minute, inicio, final, seq, fecha, p1,p1_brand,p1_direct,p1_gross_orders,p1_net_orders,p1_organic,p2,p2_brand,p2_direct,p2_gross_orders,p2_net_orders,p2_organic))suppressWarnings(rm(x,project, dataset, hits_hour, hits_minute, inicio, final, seq, fecha, p1,p1_brand,p1_direct,p1_gross_orders,p1_net_orders,p1_organic,p2,p2_brand,p2_direct,p2_gross_orders,p2_net_orders,p2_organic))suppressWarnings(rm(x,project, dataset, hits_hour, hits_minute, inicio, final, seq, fecha, p1,p1_brand,p1_direct,p1_gross_orders,p1_net_orders,p1_organic,p2,p2_brand,p2_direct,p2_gross_orders,p2_net_orders,p2_organic))
+suppressWarnings(rm(x,project, dataset, hits_hour, hits_minute, inicio, final, seq, fecha, p1,p1_brand,p1_direct,p1_gross_orders,p1_net_orders,p1_organic,p2,p2_brand,p2_direct,p2_gross_orders,p2_net_orders,p2_organic))

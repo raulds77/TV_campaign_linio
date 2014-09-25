@@ -4,9 +4,11 @@ spotemp$channel <- ibope$Canal
 spotemp$tmstmp <- as.POSIXlt(paste(ibope$Fecha,ibope$Hora),format="%d/%m/%Y %H:%M:%S")
 spotemp$rating <- ibope$Rating
 spotemp$rating <- as.numeric(sub(",", ".", ibope$Rating, fixed = TRUE))
+spotemp$rating[which(spotemp$rating == 0)]<-0.005
 spotemp$cost <- ibope$Tarifa
 spotemp$cost <- spotemp$cost/13
 spotemp$fringe <- ibope$Franja
+spotemp$duration <- ibope$Duracion_Spot
 spotemp <- spotemp[with(spotemp, order(tmstmp)), ]
 
 spot <- spotemp
