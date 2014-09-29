@@ -1,0 +1,89 @@
+---
+title: "Branding vs Deals"
+output: pdf_document
+---
+  
+  
+```{r echo=FALSE, results='hide', cache=TRUE, warning=FALSE}
+setwd("C:/Users/enrique.balp/Desktop/TV_campaign_linio/TV_analysis")
+source("./run_analysis.R")
+```
+
+### Country is:
+```{r echo=FALSE}
+country
+```
+Colombia
+
+```{r echo=FALSE}
+library(ggplot2)
+
+beg1<-as.POSIXlt("20140910",format="%Y%m%d")
+end1<-as.POSIXlt("20140916",format="%Y%m%d")
+
+beg2<-as.POSIXlt("20140917",format="%Y%m%d")
+end2<-as.POSIXlt("20140923",format="%Y%m%d")
+
+spts1 <- spot[which(as.POSIXlt(spot$tmstmp)>=beg1 & as.POSIXlt(spot$tmstmp)<=end1),]
+spts2 <- spot[which(as.POSIXlt(spot$tmstmp)>=beg2 & as.POSIXlt(spot$tmstmp)<=(end2)),]
+
+spts1$type <- "30' Branding"
+spts2$type <- "10' Deals"
+
+spts <- rbind(spts1,spts2)
+spts$type <- factor(spts$type)
+spts$duration <- factor(spts$duration)
+
+glr <- ggplot(spts,aes(y = lift_v, x = rating, colour=type, shape=type)) +
+  geom_point() + geom_smooth(method="lm", fill=NA)+ggtitle(paste("Response vs Rating by campaign --",country))
+
+glc <- ggplot(spts,aes(y = lift_v, x = cost, colour=type, shape=type)) +
+  geom_point() + geom_smooth(method="lm", fill=NA)+ggtitle(paste("Response vs Cost by campaign --",country))
+
+gcr <- ggplot(spts,aes(y = rating, x = cost, colour=type, shape=type)) +  geom_point() + geom_smooth(method="lm", fill=NA)+ggtitle(paste("Rating vs Cost by Campaign --",country))
+
+########################
+
+gdeals <- ggplot(spts2,aes(y = lift_v, x = rating, colour = factor(date), shape=factor(date))) +
+  geom_point() + geom_smooth(method="lm", fill=NA)+ggtitle(paste("Response vs rating by date",country))
+```
+
+## Lift in visits VS rating
+
+In the case of Colombia, there is no difference in response compared to rating between Deals and Branding.
+
+
+```{r, echo=FALSE, fig.width=6, fig.height=4}
+glr
+#summary(lm(lift_v~rating+type,data=spts))
+```
+\pagebreak
+
+## Lift in visits VS cost
+
+In Colombia, cheaper 10" spots create as much response as more expensive 30", and therefore are more efficient.
+
+```{r, echo=FALSE, fig.width=6, fig.height=4}
+glc
+#summary(lm(lift_v~cost+type,data=spts))
+```
+\pagebreak
+
+## Rating VS cost
+
+Because of lower duration, TRPs are cheaper for the 10" spots in a ratio of C10 = 1/3 C30
+
+```{r, echo=FALSE, fig.width=6, fig.height=4}
+gcr
+#summary(lm(rating~cost+type,data=spts))
+```
+
+\pagebreak
+
+## Deals comparison
+
+Deals were not significantly different in their responses
+
+```{r, echo=FALSE, fig.width=6, fig.height=4}
+gdeals
+```

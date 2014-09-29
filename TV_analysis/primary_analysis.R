@@ -10,7 +10,7 @@ for (j in 1:length(seqdays)){
   d <- seqdays[j]
   print("---")
   print(paste("Loading & Analysing",d,country))
-  fileres <- paste("./",country,"/results/",country,"_visits_processed_",strftime(d,format="%Y%m%d"),".csv",sep="")
+  fileres <- paste("./",country,"/results/",country,"_visits_processed_",strftime(d,format="%Y%m%d"),"_",infl,".csv",sep="")
   
   if (! file.exists(fileres)){
   
@@ -44,23 +44,24 @@ for (j in 1:length(seqdays)){
   vtmp$base_v <- base; vtmp$extra_v <- extra
   # New visits
   print("Instant Baseline New Visits")
-  vx <- vtmp$newvisits;
+  xv <- vtmp$newvisits;
   source('./instbaselift.R')
   vtmp$base_nv <- base; vtmp$extra_nv <- extra
   # Branded visits
   print("Instant Baseline Branded Visits")
-  vx <- vtmp$brand;
+  xv <- vtmp$branding;
   source('./instbaselift.R')
   vtmp$base_b <- base; vtmp$extra_b <- extra
 
   ####   ------    END Instant Baselines   -----------    ####       
 
-  write.csv(vtmp, fileres)
+  write.csv(vtmp, fileres,row.names=FALSE)
   } else {
     vtmp <- read.csv(fileres)
+    vtmp$tmstmp <- as.POSIXlt(vtmp$tmstmp)
   }
 
-  filespots <- paste("./",country,"/results/",country,"_spots_processed_",strftime(d,format="%Y%m%d"),".csv",sep="")
+  filespots <- paste("./",country,"/results/",country,"_spots_processed_",strftime(d,format="%Y%m%d"),"_",infl,".csv",sep="")
   if (! file.exists(filespots)){
     spotmp <- spot[which(spot$date == strftime(d,format="%Y%m%d")),]
     
@@ -86,9 +87,10 @@ for (j in 1:length(seqdays)){
     
     ####  ------  END Spot Lifts  ------  ####
     
-    write.csv(spotmp, filespots)
+    write.csv(spotmp, filespots, row.names=FALSE)
   } else {
     spotmp <- read.csv(filespots)
+    spotmp$tmstmp <- as.POSIXlt(spotmp$tmstmp)
   }
 
   v <- rbind(v,vtmp) 

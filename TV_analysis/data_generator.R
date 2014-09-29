@@ -7,7 +7,7 @@ library(RMySQL)
 library(yaml)
 
 country <- toupper(country)
-inicio <- as.Date("2014-08-25")
+inicio <- as.Date(start)
 final <- as.Date(end)
 
 # - - - - - - - - - - - - - - - #
@@ -23,6 +23,11 @@ dataset <- "58090804"
 if(country == "COL"){
   project <- "golden-passkey-615"
   dataset <- "58093646"
+}
+
+if(country == "PER"){
+  project <- "virtual-door-615"
+  dataset <- "59608596"
 }
 
 seq <- seq(from = inicio, to=final,by = 1)

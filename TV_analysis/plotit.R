@@ -2,7 +2,7 @@
 ### This is not called from primary_analysis.R (plotting will be done in Tableau)
 
 library(ggplot2)
-dayplot <- "20140829"
+dayplot <- "20140925"
 
 gtime1 <- as.POSIXlt(paste(dayplot,"160000"),format="%Y%m%d %H%M%S")
 gtime2 <- as.POSIXlt(paste(dayplot,"235900"),format="%Y%m%d %H%M%S")
@@ -12,8 +12,8 @@ index <- which(as.POSIXlt(v$tmstmp)==gtime1 | as.POSIXlt(v$tmstmp)==gtime2)
 gtime<-ggplot(v[index[1]:index[2],], aes(tmstmp)) + 
   geom_line(aes(y = visits, colour = "Visits")) + 
   geom_line(aes(y = rating*50, colour = "TRPs")) +
-  geom_line(aes(y = baseprom, colour = "Avg Baseline")) +
-  geom_line(aes(y = v$base[index[1]:index[2]], colour = "Instant Baseline"))+
+  #geom_line(aes(y = baseprom, colour = "Avg Baseline")) +
+  geom_line(aes(y = v$base_v[index[1]:index[2]], colour = "Instant Baseline"))+
   ylab("Visits per minute")+
   ggtitle(paste("TRPs & Visits (detail w baselines)", toupper(country),dayplot))+
   xlab("Time")
@@ -24,7 +24,7 @@ gliftgrp <- ggplot(chan, aes(x=channel, y=liftgrp, fill=channel)) + geom_bar(sta
   ggtitle(paste("Lift/GRPs by Channel",strftime(start,format="%b%d"),strftime(end,format="%b%d")))
 gcostgrp <- ggplot(chan, aes(x=channel, y=cost/rating, fill=channel)) + geom_bar(stat="identity") +  
   ggtitle(paste("Cost per GRP by Channel",strftime(start,format="%b%d"),strftime(end,format="%b%d")))
-glift <- ggplot(chan, aes(x=channel, y=lift, fill=channel)) + geom_bar(stat="identity") +  
+glift <- ggplot(chan, aes(x=channel, y=lift_nv, fill=channel)) + geom_bar(stat="identity") +  
   ggtitle(paste("Avg Lift by Channel",strftime(start,format="%b%d"),strftime(end,format="%b%d")))
 gcost <- ggplot(chan, aes(x=channel, y=cost, fill=channel)) + geom_bar(stat="identity") +  
   ggtitle(paste("Avg Cost by Channel",strftime(start,format="%b%d"),strftime(end,format="%b%d")))
@@ -51,7 +51,7 @@ gpoint<-ggplot(chan,aes(chan$count,y=lift/cost,ymin=(lift-conflift)/cost,ymax=(l
 theme_set(theme_gray(base_size = 18))
 stamp <- paste(toupper(country),strftime(start,format="%b%d"),"-", strftime(end,format="%b%d"))
 
-coleff <- ggplot(chtm, aes(fringe, channel)) + geom_tile(aes(fill = (lift/cost)), colour = "white") +
+coleff <- ggplot(chtm, aes(fringe, channel)) + geom_tile(aes(fill = (lift_nv/cost)), colour = "white") +
   scale_fill_gradient(low="red",high="green") + facet_grid(.~dtype) + ggtitle(paste("Efficiency",stamp))
 
 colcount <- ggplot(chtm, aes(fringe, channel)) + geom_tile(aes(fill = count), colour = "white") +
