@@ -1,7 +1,7 @@
 ibope <- read.csv("./mex/spots/Data_Linio.csv")
 spotemp <- data.frame(rating = numeric(length(ibope$Canal)))
 spotemp$channel <- ibope$Canal
-spotemp$tmstmp <- as.POSIXlt(paste(ibope$Fecha,ibope$Hora),format="%d/%m/%Y %H:%M:%S")
+spotemp$tmstmp <- as.POSIXlt(paste(gsub(" ","",ibope$fecha),gsub(" ","",ibope$Hora)),format="%d/%m/%Y %H:%M:%S")
 spotemp$rating <- ibope$Rating
 spotemp$rating <- as.numeric(sub(",", ".", ibope$Rating, fixed = TRUE))
 spotemp$rating[which(spotemp$rating == 0)]<-0.005
@@ -17,6 +17,8 @@ if (country == "mex") spotemp$ncost[which(spotemp$duration == 10)] <- spotemp$nc
 spot <- spotemp
 spot$dtype <- "we"
 
-spot$dtype[which(wday(spot$tmstmp)>1 & wday(spot$tmstmp)<6)]<-"wd"
+spot$dtype[which(wday(spot$tmstmp)>1 & wday(spot$tmstmp)<7)]<-"wd"
 
 spot$date <- strftime(spot$tmstmp,"%Y%m%d")
+
+

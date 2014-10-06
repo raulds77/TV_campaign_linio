@@ -24,13 +24,18 @@ end1<-as.POSIXlt("20140916",format="%Y%m%d")
 beg2<-as.POSIXlt("20140917",format="%Y%m%d")
 end2<-as.POSIXlt("20140923",format="%Y%m%d")
 
+beg0<-as.POSIXlt("20140903",format="%Y%m%d")
+end0<-as.POSIXlt("20140909",format="%Y%m%d")
+
 spts1 <- spot[which(as.POSIXlt(spot$tmstmp)>=beg1 & as.POSIXlt(spot$tmstmp)<=end1),]
 spts2 <- spot[which(as.POSIXlt(spot$tmstmp)>=beg2 & as.POSIXlt(spot$tmstmp)<=(end2)),]
+spts0 <- spot[which(as.POSIXlt(spot$tmstmp)>=beg0 & as.POSIXlt(spot$tmstmp)<=(end0)),]
 
-spts1$type <- "30' Branding"
-spts2$type <- "10' Deals"
+spts1$type <- "Cable 30\" Branding"
+spts2$type <- "Cable 10\" Deals"
+spts0$type <- "Sky 30\" Branding"
 
-spts <- rbind(spts1,spts2)
+spts <- rbind(spts1,spts2, spts0)
 spts$type <- factor(spts$type)
 spts$duration <- factor(spts$duration)
 

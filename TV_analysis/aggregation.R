@@ -4,8 +4,11 @@
 
 library(plyr)
 
+#spot <- spot[which(spot$date >= 20140925 & spot$date < 20140931),]
+
 print("Channel Aggregation")
 chanlift <- aggregate(lift_nv~channel,data=spot,mean)
+#chanlift$lift_nv[which(chanlift$lift_nv < 0)]<-0
 chancost <- aggregate(cost~channel,data=spot,mean)
 chanrat <- aggregate(rating~channel,data=spot,mean)
 chanliftsd <-aggregate(lift_nv~channel,data=spot,sd,na.rm=TRUE)
@@ -19,7 +22,7 @@ chan$grpcost <- chan$rating/chan$cost
 chan$count <- count(spot, 'channel')$freq
 suppressWarnings(chan$conflift <- qt(0.975,df=chan$count-1)*chan$liftsd/sqrt(chan$count))
 suppressWarnings(chan$confprop <- chan$lift_nv/(qt(0.975,df=chan$count-1)*chan$liftsd/sqrt(chan$count)))
-suppressWarnings(chan$good <- 1/(chan$confprop>1.5)/(chan$count>4))
+suppressWarnings(chan$good <- 1/(chan$confprop>1)/(chan$count>4))
 rm(chanlift,chancost,chanrat,chanliftsd)
 
 print("Channel-Fringe Aggregation")
@@ -35,5 +38,13 @@ chtm$count <- count(spot, c('channel','fringe','dtype'))$freq
 chtm$fringe <- factor(chtm$fringe)
 suppressWarnings(chtm$conf <- (qt(0.975,df=chtm$count-1)*chtm$liftsd/sqrt(chtm$count)))
 suppressWarnings(chtm$confprop <- chtm$lift_nv/(qt(0.975,df=chtm$count-1)*chtm$liftsd/sqrt(chtm$count)))
-suppressWarnings(chtm$good <- 1/(chtm$confprop>1)/(chtm$count>4))
+suppressWarnings(chtm$good <- 1/(chtm$confprop>1)/(chtm$count>3))
 rm(chanlift,chancost,chanrat,chtmliftsd)
+
+
+chtm$eff <- chtm$lift_nv/chtm$cost
+chtm <- chtm[with(chtm, order(-eff)), ]
+res <- chtm[c("channel","fringe","dtype","eff","lift_nv","cost", "count")]
+write.csv(res,"perres.csv")
+
+

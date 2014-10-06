@@ -26,9 +26,11 @@ for (i in 1:length(seqdays)){
   }
   spotemp$cost <- spotemp$cost/2  ## from colombian/1000 to USD
   spotemp$duration <- ibope$X.Duracion.
+  whch <- which((gsub(" ","",tolower(spotemp$channel)) == "espn")|(gsub(" ","",tolower(spotemp$channel)) == "espn+"))
+  spotemp$cost[whch] <- 10 * spotemp$duration[whch] 
   spotemp$fringe <- substr(ibope$X.Franja.,2,2)
   spotemp$dist <- numeric(length(spotemp$tmstmp)) 
-  if(wday(d)>1 && wday(d)<6) spotemp$dtype<-"wd" else spotemp$dtype<-"we"
+  if(wday(d)>1 && wday(d)<7) spotemp$dtype<-"wd" else spotemp$dtype<-"we"
   spotemp <- spotemp[with(spotemp, order(tmstmp)), ]
   #for(i in 2:length(spotemp$dist)){spotemp$dist[i] <- as.numeric(difftime(spotemp$tmstmp[i], spotemp$tmstmp[i-1]))}
   spotemp$date <- strftime(spotemp$tmstmp,"%Y%m%d")

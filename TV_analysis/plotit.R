@@ -4,22 +4,30 @@
 library(ggplot2)
 dayplot <- "20140925"
 
-gtime1 <- as.POSIXlt(paste(dayplot,"160000"),format="%Y%m%d %H%M%S")
+gtime1 <- as.POSIXlt(paste(dayplot,"010000"),format="%Y%m%d %H%M%S")
 gtime2 <- as.POSIXlt(paste(dayplot,"235900"),format="%Y%m%d %H%M%S")
 
 index <- which(as.POSIXlt(v$tmstmp)==gtime1 | as.POSIXlt(v$tmstmp)==gtime2)
 
 gtime<-ggplot(v[index[1]:index[2],], aes(tmstmp)) + 
-  geom_line(aes(y = visits, colour = "Visits")) + 
-  geom_line(aes(y = rating*50, colour = "TRPs")) +
-  #geom_line(aes(y = baseprom, colour = "Avg Baseline")) +
-  geom_line(aes(y = v$base_v[index[1]:index[2]], colour = "Instant Baseline"))+
+  
+  #geom_line(aes(y = v$base_v[index[1]:index[2]]))+
+  #geom_line(aes(y = v$base_nv[index[1]:index[2]]))+
+  #geom_line(aes(y = v$base_b[index[1]:index[2]]))+
+  
+  geom_line(aes(y = visits,color="Total"))+
+  geom_line(aes(y = branding,color="Branded"))+
+  geom_line(aes(y = newvisits,color="New"))+
+  
+  geom_line(aes(y = rating*50, colour = "TRPs x 50")) +
+  
   ylab("Visits per minute")+
-  ggtitle(paste("TRPs & Visits (detail w baselines)", toupper(country),dayplot))+
+  ggtitle(paste("TRPs & Visits (w/baselines)", toupper(country),dayplot))+
   xlab("Time")
 
+
 gliftcost <- ggplot(chan, aes(x=channel, y=liftcost, fill=channel)) + geom_bar(stat="identity") +  
-  ggtitle(paste("Lift/Cost by Channel",strftime(start,format="%b%d"),strftime(end,format="%b%d")))
+  ggtitle(paste("Lift/Cost by Channel"))
 gliftgrp <- ggplot(chan, aes(x=channel, y=liftgrp, fill=channel)) + geom_bar(stat="identity") +  
   ggtitle(paste("Lift/GRPs by Channel",strftime(start,format="%b%d"),strftime(end,format="%b%d")))
 gcostgrp <- ggplot(chan, aes(x=channel, y=cost/rating, fill=channel)) + geom_bar(stat="identity") +  
@@ -66,7 +74,7 @@ collift <- ggplot(chtm, aes(fringe, channel)) + geom_tile(aes(fill = log(lift)),
 colconf <- ggplot(chtm, aes(fringe, channel)) + geom_tile(aes(fill = conf), colour = "white") +
   scale_fill_gradient(low="red",high="green") + facet_grid(.~dtype) + ggtitle("Statistical Confidence sqrt( Lift / ConfidenceInterval)")
 
-colconfprop <- ggplot(chtm, aes(fringe, channel)) + geom_tile(aes(fill = sqrt(confprop)*good), colour = "white") +
+colconfprop <- ggplot(chtm, aes(fringe, channel)) + geom_tile(aes(fill = sqrt(confprop)), colour = "white") +
   scale_fill_gradient(low="red",high="green") + facet_grid(.~dtype) + ggtitle(paste("Statistical Confidence -- (Lift / ConfidenceInterval)",stamp))
 
 
