@@ -6,3 +6,4 @@ TV_analysis/.gitignore
 *.Rdata
 *.pdf
 *cache*
+*zip
