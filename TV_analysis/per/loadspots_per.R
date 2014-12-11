@@ -6,10 +6,10 @@ spotemp$tmstmp <- as.POSIXlt(paste(ibope$DIA,strftime(as.POSIXlt(ibope$HORA), fo
 spotemp$rating <- ibope$Rating
 spotemp$rating <- as.numeric(sub(",", ".", ibope$Rating, fixed = TRUE))
 spotemp$rating[which(spotemp$rating == 0)]<-0.005
-spotemp$cost <- ibope$COSTO
+spotemp$cost <- ibope$TARIFA.IMPRESA
 
 spotemp$fringe <- factor(ibope$Franja)
-spotemp$fringe <- factor(spotemp$fringe, c("Early","Day","Prime","Late","overnight"))
+spotemp$fringe <- factor(spotemp$fringe, c("Day","Early","Prime","Late","overnight"))
 spotemp$duration <- ibope$DUR
 spotemp <- spotemp[with(spotemp, order(tmstmp)), ]
 spotemp$ncost <- spotemp$cost*30/spotemp$duration

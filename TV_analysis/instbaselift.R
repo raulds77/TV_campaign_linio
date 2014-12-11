@@ -12,7 +12,7 @@ thres_rat <- 0.1; winba <- 5; goods <- 0;
 for(t in seq(1:length(xv))){
   bad <- (sum(vtmp$rating[max(1,t-infl+1):t]*seq(.1,min(t*0.1,infl*0.1),0.1))>thres_rat)  
   if(base[t]>mean(xv[max(1,t-winba):t])) bad <- FALSE
-  if(bad) {
+  if(bad & t>1) {
     base[t] <- base[t-1]
     goods <- 0
   } else {

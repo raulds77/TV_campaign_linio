@@ -1,19 +1,18 @@
 ### Optimization potential, fast view
 
-goodchans <- which(chan$liftcost > 0.05)
-badchans <- which(chan$liftcost <= 0.05)
-effgood <- sum(chan$liftcost[goodchans]*chan$count[goodchans])/sum(chan$count[goodchans])
-effbad <- sum(chan$liftcost[badchans]*chan$count[badchans])/sum(chan$count[badchans])
+goodchans <- which(chtm$eff > 0.05)
+badchans <- which(chtm$eff <= 0.05)
+effgood <- sum(chtm$eff[goodchans]*chtm$count[goodchans])/sum(chtm$count[goodchans])
+effbad <- sum(chtm$eff[badchans]*chtm$count[badchans])/sum(chtm$count[badchans])
 
-invgood <- sum(chan$cost.y[goodchans])
-invbad <- sum(chan$cost.y[badchans])
+invgood <- sum(chtm$ncost[goodchans])
+invbad <- sum(chtm$ncost[badchans])
 
-####################
+chtm$suggested <- 0
+chtm$suggested[goodchans] <- (invgood + invbad)*chtm$eff[goodchans]/sum(chtm$eff[goodchans])
 
-goodchans <- which(chan$liftcost > 0.1 & chan$good == 1)
-badchans <- which(chan$liftcost <= 0.1  & chan$good == 1)
-effgood <- sum(chan$liftcost[goodchans]*chan$count[goodchans])/sum(chan$count[goodchans])
-effbad <- sum(chan$liftcost[badchans]*chan$count[badchans])/sum(chan$count[badchans])
+newlift <- sum(chtm$eff*chtm$suggested)
+oldlift <- sum(abs(chtm$lift_nv))
 
-invgood <- sum(chan$cost[goodchans])
-invbad <- sum(chan$cost[badchans])
+newlift/oldlift  ## same investment, times more lift
+oldlift/newlift  ## same effect, times less investment
